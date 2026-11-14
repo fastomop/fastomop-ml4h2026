@@ -1,0 +1,74 @@
+[project]
+name = "clean_fastomop"
+version = "0.1.0"
+description = "Tool-mediated agentic framework for NL2SQL and cohort construction on the OMOP Common Data Model."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10,<3.13"
+authors = [{ name = "clean_fastomop contributors" }]
+keywords = ["omop", "ohdsi", "text-to-sql", "llm", "agents", "mcp", "cohort"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = [
+    "agno>=2.3.1",
+    "mcp>=1.0.0",
+    "ollama>=0.1.0",
+    "openai>=1.0.0",
+    "anthropic>=0.42.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "tomli>=2.0.0; python_version < '3.11'",
+    "fastssv",
+]
+
+[project.urls]
+Homepage = "https://github.com/fastomop/fastomop-ml4h2026"
+Repository = "https://github.com/fastomop/fastomop-ml4h2026"
+Issues = "https://github.com/fastomop/fastomop-ml4h2026/issues"
+
+[project.optional-dependencies]
+observability = [
+    "langfuse>=2.0.0",
+    "openlit>=1.0.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+clean-fastomop = "clean_fastomop.run:main"
+clean-fastomop-eval = "clean_fastomop.eval:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/clean_fastomop"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+# FastSSV (the SQL validation gate) is installed from its public repository at a pinned commit.
+[tool.uv.sources]
+fastssv = { git = "https://github.com/fastomop/fastSSV", rev = "17b475baf34b5b3cedc39698ed6b2836c1165dee" }

@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "fastomop-ml4h2026"
+type: software
+license: Apache-2.0
+repository-code: "https://github.com/fastomop/fastomop-ml4h2026"
+authors:
+  - family-names: "Möller-Grell"
+    given-names: "Niko"
+  - family-names: "Shenzhang"
+    given-names: "Shihao"
+  - family-names: "Jiang"
+    given-names: "Zhangshu Joshua"
+  - family-names: "Dobson"
+    given-names: "Richard JB"
+  - family-names: "Chandrabalan"
+    given-names: "Vishnu V"
+preferred-citation:
+  type: conference-paper
+  title: "Separating Reasoning from Execution: A Tool-Mediated Agentic Framework for NL2SQL and Cohort Construction on OMOP CDM"
+  authors:
+    - family-names: "Möller-Grell"
+      given-names: "Niko"
+    - family-names: "Shenzhang"
+      given-names: "Shihao"
+    - family-names: "Jiang"
+      given-names: "Zhangshu Joshua"
+    - family-names: "Dobson"
+      given-names: "Richard JB"
+    - family-names: "Chandrabalan"
+      given-names: "Vishnu V"
+  collection-title: "Proceedings of Machine Learning Research"
+  volume: 346
+  conference:
+    name: "Machine Learning for Health (ML4H) 2026"
+  year: 2026

@@ -1,0 +1,107 @@
+[
+ {
+  "id": 1,
+  "input": "Number of patients grouped by gender.",
+  "expected_output": "SELECT c.concept_name AS gender, COUNT(DISTINCT p.person_id) FROM person p JOIN concept c ON p.gender_concept_id=c.concept_id GROUP BY c.concept_name;",
+  "execution_result": [
+   [
+    "FEMALE",
+    120
+   ],
+   [
+    "MALE",
+    130
+   ]
+  ]
+ },
+ {
+  "id": 2,
+  "input": "Number of patients born in year 1980.",
+  "expected_output": "SELECT COUNT(DISTINCT person_id) FROM person WHERE year_of_birth = 1980;",
+  "execution_result": [
+   [
+    7
+   ]
+  ]
+ },
+ {
+  "id": 3,
+  "input": "Number of patients taking aspirin 81 MG Oral Tablet.",
+  "expected_output": "WITH s AS (SELECT concept_id FROM concept WHERE concept_name = 'aspirin 81 MG Oral Tablet' AND vocabulary_id='RxNorm') SELECT COUNT(DISTINCT de.person_id) FROM drug_exposure de JOIN s ON de.drug_concept_id=s.concept_id;",
+  "execution_result": [
+   [
+    69
+   ]
+  ]
+ },
+ {
+  "id": 4,
+  "input": "Number of patients taking metformin 500 MG Oral Tablet.",
+  "expected_output": "WITH s AS (SELECT concept_id FROM concept WHERE concept_name = 'metformin 500 MG Oral Tablet' AND vocabulary_id='RxNorm') SELECT COUNT(DISTINCT de.person_id) FROM drug_exposure de JOIN s ON de.drug_concept_id=s.concept_id;",
+  "execution_result": [
+   [
+    73
+   ]
+  ]
+ },
+ {
+  "id": 5,
+  "input": "Number of patients taking atorvastatin 20 MG Oral Tablet.",
+  "expected_output": "WITH s AS (SELECT concept_id FROM concept WHERE concept_name = 'atorvastatin 20 MG Oral Tablet' AND vocabulary_id='RxNorm') SELECT COUNT(DISTINCT de.person_id) FROM drug_exposure de JOIN s ON de.drug_concept_id=s.concept_id;",
+  "execution_result": [
+   [
+    25
+   ]
+  ]
+ },
+ {
+  "id": 6,
+  "input": "Number of patients with condition Type 2 diabetes mellitus.",
+  "expected_output": "WITH s AS (SELECT concept_id FROM concept WHERE concept_name = 'Type 2 diabetes mellitus' AND vocabulary_id='SNOMED') SELECT COUNT(DISTINCT co.person_id) FROM condition_occurrence co JOIN s ON co.condition_concept_id=s.concept_id;",
+  "execution_result": [
+   [
+    31
+   ]
+  ]
+ },
+ {
+  "id": 7,
+  "input": "Number of patients with condition Essential hypertension.",
+  "expected_output": "WITH s AS (SELECT concept_id FROM concept WHERE concept_name = 'Essential hypertension' AND vocabulary_id='SNOMED') SELECT COUNT(DISTINCT co.person_id) FROM condition_occurrence co JOIN s ON co.condition_concept_id=s.concept_id;",
+  "execution_result": [
+   [
+    47
+   ]
+  ]
+ },
+ {
+  "id": 8,
+  "input": "Number of patients with condition Asthma.",
+  "expected_output": "WITH s AS (SELECT concept_id FROM concept WHERE concept_name = 'Asthma' AND vocabulary_id='SNOMED') SELECT COUNT(DISTINCT co.person_id) FROM condition_occurrence co JOIN s ON co.condition_concept_id=s.concept_id;",
+  "execution_result": [
+   [
+    46
+   ]
+  ]
+ },
+ {
+  "id": 9,
+  "input": "Counts of patients taking drug aspirin 81 MG Oral Tablet and metformin 500 MG Oral Tablet within 30 days.",
+  "expected_output": "-- two-drug co-exposure within 30 days (see skills/omop-best-practices)",
+  "execution_result": [
+   [
+    17
+   ]
+  ]
+ },
+ {
+  "id": 10,
+  "input": "Counts of patients taking drug metformin 500 MG Oral Tablet and atorvastatin 20 MG Oral Tablet within 30 days.",
+  "expected_output": "-- two-drug co-exposure within 30 days (see skills/omop-best-practices)",
+  "execution_result": [
+   [
+    14
+   ]
+  ]
+ }
+]

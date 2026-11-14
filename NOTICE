@@ -1,0 +1,19 @@
+fastomop-ml4h2026 (clean_fastomop)
+Copyright 2026 The clean_fastomop contributors
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This repository redistributes the following third-party binaries, unmodified, under
+cohort/tools/circe-compiler/lib/. Each remains under its own licence:
+
+  circe (OHDSI circe-be) 1.11.3            Apache-2.0   https://github.com/OHDSI/circe-be
+  SqlRender (OHDSI)                        Apache-2.0   https://github.com/OHDSI/SqlRender
+  standardized-analysis-utils 1.4.0        Apache-2.0   https://github.com/OHDSI/StandardizedAnalysisAPI
+  jackson-core/-databind/-annotations 2.11.0  Apache-2.0   https://github.com/FasterXML/jackson
+  freemarker 2.3.30                        Apache-2.0   https://freemarker.apache.org
+  commons-io 2.11.0, commons-lang3 3.10    Apache-2.0   https://commons.apache.org
+  semver4j 4.3.0                           MIT          https://github.com/semver4j/semver4j
+
+The OMOP vocabularies, MIMIC-IV, and any OMOP CDM database are not part of this
+repository and are subject to their own licences and data use agreements (see
+DATA_ACCESS.md).

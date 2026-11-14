@@ -1,0 +1,25 @@
+# Template for config.local.toml. Copy to `config.local.toml` and set the absolute
+# paths and hosts for your machine. config.local.toml is gitignored and is deep-merged
+# over config.toml at load time (only override the keys that differ).
+
+# Ollama host (only needed if it is not on localhost).
+[models.providers.ollama_gemma4_12b]
+host = "http://localhost:11434"
+
+# OpenAI-compatible endpoint (only needed if an agent uses this provider).
+[models.providers.openai_compatible]
+base_url = "http://localhost:8000/v1"
+model_id = "qwen3.8-27b"
+
+# omcp server (clinical database / SQL execution): https://github.com/fastomop/omcp
+# Point at the checkout's virtualenv interpreter and working directory.
+[mcp.omcp]
+command = "/abs/path/to/omcp/.venv/bin/python"
+cwd = "/abs/path/to/omcp"
+
+# concept-omcp server (semantic vocabulary search): https://github.com/fastomop/concept-omcp
+# The directory is embedded in the uv launch args; artifact_dir points at the prebuilt
+# index (index.turbovec + concepts.db).
+[mcp.concept_omcp]
+args = ["run", "--directory", "/abs/path/to/concept-omcp", "--no-sync", "concept-omcp", "serve"]
+artifact_dir = "/abs/path/to/concept-omcp/artifacts"

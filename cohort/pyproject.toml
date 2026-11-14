@@ -1,0 +1,35 @@
+[project]
+name = "clean-fastomop-cohort"
+version = "0.1.0"
+description = "Cohort construction for clean_fastomop: free-text cohort description -> OHDSI CIRCE-JSON, compiled with circe-be and executed on an OMOP CDM DuckDB."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.11"
+dependencies = [
+    "duckdb>=1.0",
+    "openai>=1.40",
+    "pydantic>=2.6",
+    "python-dotenv>=1.0",
+    "tqdm>=4.66",
+    "concept-omcp",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+clean-fastomop-cohort = "clean_fastomop_cohort.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/clean_fastomop_cohort"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+# The terminology service is installed from its public repository at a pinned commit.
+[tool.uv.sources]
+concept-omcp = { git = "https://github.com/fastomop/concept-omcp", rev = "54de68bcc590fe15a7b33bbf95e828351b742459" }

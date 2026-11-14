@@ -1,0 +1,116 @@
+# clean_fastomop configuration (portable defaults).
+#
+# Hierarchy: config.local.toml overrides config.toml; .env supplies secrets.
+# Machine-specific values (absolute paths to the omcp/concept-omcp checkouts, remote
+# hosts) are placeholders here and MUST be set in config.local.toml (gitignored). See
+# config.local.toml.example. Every agent picks a provider from [models.providers.*] and
+# a list of skills from skills/. The two MCP servers are configured under [mcp.*].
+
+[models]
+# Provider used for any agent that doesn't name its own model_provider.
+default_provider = "ollama_gemma4_12b"
+
+# Local Ollama. Sampling is pinned to temperature 0 with no penalties (see models.py),
+# so local and hosted providers are comparable.
+[models.providers.ollama_gemma4_12b]
+provider = "ollama"
+model_id = "gemma4:12b"
+host = "http://localhost:11434"   # override in config.local.toml
+num_ctx = 16384
+temperature = 0.0
+
+[models.providers.ollama_qwen38_27b]
+provider = "ollama"
+model_id = "qwen3.8:27b"
+host = "http://localhost:11434"   # override in config.local.toml
+num_ctx = 32768
+temperature = 0.0
+
+# Any OpenAI-compatible endpoint (vLLM, LiteLLM, a hosted gateway). `base_url` is the
+# full /v1 URL; the API key is read from the env var named by `api_key_env` (set it in
+# .env, never here).
+[models.providers.openai_compatible]
+provider = "openai_compatible"
+model_id = "qwen3.8-27b"
+base_url = "http://localhost:8000/v1"   # override in config.local.toml
+api_key_env = "OPENAI_COMPATIBLE_API_KEY"
+temperature = 0.0
+
+[models.providers.anthropic]
+provider = "anthropic"
+model_id = "claude-3-5-sonnet-20241022"
+
+[models.providers.openai]
+provider = "openai"
+model_id = "gpt-4-turbo-preview"
+
+[models.providers.azure]
+provider = "azure"
+model_id = "gpt-4.1"
+api_version = "2025-01-01-preview"
+temperature = 0.0
+
+# === Agents ===
+# Each agent: a name, a provider key, and the skills composed into its instructions.
+
+[agents.semantic]
+name = "OMOP Semantic Agent"
+model_provider = "ollama_gemma4_12b"
+skills = ["semantic-role", "request-triage", "entity-extraction", "query-classification", "temporal-extraction"]
+reasoning = false
+markdown = false
+
+[agents.database]
+name = "OMOP Database Agent"
+model_provider = "ollama_gemma4_12b"
+skills = ["database-role", "omop-hierarchy", "omop-best-practices", "schema-knowledge"]
+reasoning = false
+markdown = false
+
+# === MCP integrations ===
+# Each server is launched as a local subprocess over stdio (`command` + `args`,
+# kept as separate elements to avoid shell-quoting ambiguity).
+
+# Clinical database / SQL execution. Local omcp server over stdio
+# (https://github.com/fastomop/omcp). Exposes: Get_Information_Schema, Select_Query.
+# `command` and `cwd` are machine-specific — set them in config.local.toml.
+[mcp.omcp]
+command = "/abs/path/to/omcp/.venv/bin/python"   # set in config.local.toml
+args = ["-c", "from omcp.main import main; main()"]
+cwd = "/abs/path/to/omcp"                        # set in config.local.toml
+timeout_seconds = 660
+
+# Semantic OMOP-vocabulary search. Local concept-omcp server over stdio
+# (https://github.com/fastomop/concept-omcp).
+# Exposes: search_concepts, get_concept_by_id, find_concepts_by_relationship.
+# `args` (the --directory) and `artifact_dir` are machine-specific — set them in config.local.toml.
+[mcp.concept_omcp]
+command = "uv"
+args = ["run", "--directory", "/abs/path/to/concept-omcp", "--no-sync", "concept-omcp", "serve"]
+artifact_dir = "/abs/path/to/concept-omcp/artifacts"    # set in config.local.toml
+timeout_seconds = 120
+
+[observability]
+enabled = false
+
+# === Pre-execution SQL validation (FastSSV) ===
+# Static OMOP-CDM check on the database agent's Select_Query, run BEFORE the query is
+# executed. On any ERROR-severity violation the query is blocked and the agent must revise.
+[validation]
+enabled = true
+strict = true        # escalate dangerous best-practice rules (e.g. concept standardization) to ERROR
+dialect = "duckdb"   # match the omcp database dialect
+# Policy for the refinement loop's FastSSV feedback: "clinical" suppresses the OHDSI/epi
+# observation-window convention rules (observation_period anchoring, immortal-time) that a
+# descriptive count query legitimately declines — appropriate for a clinical (EHR) database;
+# "epidemiological" enforces every rule. Does not affect the production safety gate (it blocks
+# ERRORs only, and the suppressed rules are WARNING-severity).
+policy = "clinical"
+
+# === Pre-generation governance screen ===
+# Deterministic read of the semantic agent's `request_class`. When enabled, a request
+# classified out_of_scope or adversarial halts the pipeline before SQL generation.
+# Disable to measure the SQL path in isolation (the post-generation SQL validator and the
+# read-only connection are unaffected either way).
+[governance]
+enabled = true

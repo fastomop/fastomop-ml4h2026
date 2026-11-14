@@ -1,0 +1,44 @@
+# --- Secrets (never commit) ---
+.env
+.env.*
+!.env.example
+config.local.toml
+config.local.*.toml
+
+# --- Python / virtualenv ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# --- Tooling caches ---
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- Editor / OS ---
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# --- Evaluation data and output (derived from the source database; see DATA_ACCESS.md) ---
+datasets/
+eval_runs*/
+cohort/results/
+cohort/references/
+*.log
+
+# --- Data / model artifacts ---
+*.duckdb
+*.duckdb.tmp/
+*.sqlite
+*.turbovec
+
+# --- Build output of the Circe compiler wrapper ---
+cohort/tools/circe-compiler/build/
